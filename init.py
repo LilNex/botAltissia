@@ -59,7 +59,9 @@ time.sleep(0.5)
 browser.find_element_by_xpath('//*[@id="FAIRE_UNE_PRESENTATION_2"]/ul/li[1]/altissia-lesson-card/a').click()
 time.sleep(1.5)
 
-for x in range(0,10):
+for x in range(0,25):
+    print('boucle x : '+str(x))
+
     print('Choosing the video')
     browser.find_element_by_xpath('//*[@id="app-main-content"]/altissia-app-container/div/main/altissia-app-lesson-menu/div/ul/li[1]/altissia-activity-overview-card/a').click()
     time.sleep(1)
