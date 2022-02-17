@@ -1,11 +1,12 @@
 # Altissia Watcher Bot
 
 
-**Bot pour atteindre les 30heures requis sur la plateforme OFPPT Langue
-****     "FOR EDUCATIONAL PURPOSES ONLY"   ****
+**Bot pour atteindre les 30heures requis sur la plateforme OFPPT Langue**
+
+                  "FOR EDUCATIONAL PURPOSES ONLY"   
 
 ####
-Requirements
+# Requirements
 ####
 * Python3
 * Selenium (install with pip)
@@ -15,7 +16,7 @@ Requirements
 
 
 ************
-Installation
+# Installation
 ************
 
 Remplacer les variables email et password par vos identifiants 
