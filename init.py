@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import sys
 from selenium import webdriver
 import time
@@ -7,7 +8,7 @@ browser = webdriver.Chrome(executable_path='chromedriver.exe')
 # 
 
 email = "chaiq.ismail@ofppt-edu.ma"
-
+password=''
 
 emailXpath = '//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-input-label[1]/div/input'
 passXpath ='//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-input-label[2]/div/div/input'
@@ -36,7 +37,8 @@ browser.find_element_by_css_selector('#app-main-content > altissia-lc-reset-pass
 # time.sleep(1)
 
 browser.find_element_by_xpath(emailXpath).send_keys(email)
-password = input('password : ')
+if password == '':
+    password = input('password : ')
 browser.find_element_by_xpath(passXpath).send_keys(password)
 print('logging in ...')
 time.sleep(1.5)
