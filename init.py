@@ -76,14 +76,14 @@ for x in range(0,10):
         print('sleep n°'+str(i))
 
     # =============================
-    input('click btn Continu')
+    print('click btn Continu')
 
     browser.find_element_by_xpath('//*[@id="app-main-content"]/altissia-app-container/div/main/altissia-activity-result/div/div/altissia-main-button/button').click()
     time.sleep(5)
-    input('fin tour boucle')
+    print('fin tour boucle')
 
 
-input('fin prog')
+print('fin prog')
 
 
 
