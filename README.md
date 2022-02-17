@@ -3,7 +3,7 @@
 
 **Bot pour atteindre les 30heures requis sur la plateforme OFPPT Langue**
 
-                  "FOR EDUCATIONAL PURPOSES ONLY"   
+                                              "FOR EDUCATIONAL PURPOSES ONLY"                                                   hh :)
 
 ####
 # Requirements
