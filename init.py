@@ -20,7 +20,7 @@ browser = webdriver.Chrome(executable_path='chromedriver.exe')
 
 # System.setProperty("webdriver.gecko.driver",Path_of_Firefox_Driver"); // Setting system properties of FirefoxDriver
 # driver = webdriver.Firefox()()
-# 
+
 
 
 # ============= Setting =============
