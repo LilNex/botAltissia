@@ -15,9 +15,18 @@ from selenium.common.exceptions import *
 from classes import *
 # browser  = webdriver.Chrome(ChromeDriverManager().install())
 browser = webdriver.Chrome(executable_path='chromedriver.exe')
-# ======= Setting =============
-# 
+# browser = webdriver.Firefox(executable_path='geckodriver.exe')
 
+
+# System.setProperty("webdriver.gecko.driver",Path_of_Firefox_Driver"); // Setting system properties of FirefoxDriver
+driver = webdriver.Firefox()()
+
+
+
+# ============= Setting =============
+# 
+email ='chaiq.ismail@ofppt-edu.ma'
+password ='Lilnex123@'
 
 
 emailXpath = '//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-input-label[1]/div/input'
@@ -272,6 +281,7 @@ time.sleep(1)
 browser.find_element_by_css_selector('#app-main-content > altissia-lc-reset-password-container > div > altissia-navigation-header > header > altissia-nav-bar > nav > div > ul > li:nth-child(2) > altissia-language-droplist > div > ul > li:nth-child(2) > button').click()
 # browser.find_element_by_css_selector('#app-main-content > altissia-lc-reset-password-container > div > altissia-navigation-header > header > altissia-nav-bar > nav > div > ul > li:nth-child(2) > altissia-language-droplist > div > button').click()
 # time.sleep(1)
+
 
 browser.find_element_by_xpath(emailXpath).send_keys(email)
 if password == '':
