@@ -127,7 +127,14 @@ def doExercice():
         # btn.click()
         time.sleep(3)
 
-        browser.find_element_by_css_selector('.btn-primary-ghost').click()
+        while True:
+            try:
+                browser.find_element_by_css_selector('.btn-primary-ghost').click()
+                break
+            except NoSuchElementException:
+                time.sleep(0.5)
+                continue
+
         time.sleep(0.5)
 
         btn = browser.find_element_by_css_selector('.footer-button-bar-btn')
@@ -160,6 +167,11 @@ def doExercice():
                     browser.find_element_by_css_selector('button.btn-primary').click()
                     break
                 except NoSuchElementException:
+                    try:
+                        browser.find_element_by_css_selector('button.footer-button-bar-btn').click()
+                        break
+                    except NoSuchElementException:
+                        continue
                     continue
 
             time.sleep(1)
@@ -264,8 +276,11 @@ def isIncorrect():
 # Open the Website
 # browser.get('https://www.instagram.com/')
 
+# https://app.ofppt-langues.ma/gw/api/saml/init?idp=https://sts.windows.net/dae54ad7-43df-47b7-ae86-4ac13ae567af/
+
 # print('nav to insta\n')
 # click on Log in with Facebook
+
 
 
 
@@ -293,7 +308,27 @@ print('logging in ...')
 
 browser.find_element_by_xpath('//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-main-button').click()
 time.sleep(1.5)
-getListeTheme()
+try:
+    getListeTheme()
+except:
+    browser.get('https://www.office.com')
+    time.sleep(1)
+    browser.find_element_by_css_selector('a#hero-banner-sign-in-to-office-365-link').click()
+    time.sleep(2.5)
+    browser.find_element_by_css_selector('input#i0116').send_keys(email)
+    time.sleep(0.3)
+    browser.find_element_by_css_selector('input#idSIButton9').click()
+    time.sleep(1)
+    browser.find_element_by_css_selector('input#i0118').send_keys(password)
+    time.sleep(0.3)
+    browser.find_element_by_css_selector('input#idSIButton9').click()
+    time.sleep(0.3)
+
+    browser.find_element_by_css_selector('input#idBtn_Back').click()
+    time.sleep(2)
+    browser.get('https://app.ofppt-langues.ma/gw/api/saml/init?idp=https://sts.windows.net/dae54ad7-43df-47b7-ae86-4ac13ae567af/')
+    time.sleep(5)
+    browser.get('https://app.ofppt-langues.ma/platform/#/learning-path?interfaceLg=fr-FR')
 
 
 i= randint(0,12)
@@ -315,12 +350,25 @@ for j in range(0,getCountThemes()):
         for i in range(0,len(getListExCards())):
 
             c:WebElement
+            exit = False
             while True:
                 try:
                     c = getListExCards()[i]
                     break
                 except IndexError:
                     browser.get('https://app.ofppt-langues.ma/platform/#/learning-path')
+                    time.sleep(1)
+                    if len(browser.find_elements_by_css_selector('.altissia-main-button')) > 0:
+                        browser.find_element_by_css_selector('.altissia-main-button').click()
+                        exit = True
+                        time.sleep(0.5)
+                        break
+            
+
+            if exit:
+                break
+
+
 
 
             if  (str.__contains__(c.text,"Vocabulaire") or str.__contains__(c.text,"Score : 100")  or str.__contains__(c.text,"Vidéo"))  == False:
