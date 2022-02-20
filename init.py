@@ -25,8 +25,8 @@ driver = webdriver.Firefox()()
 
 # ============= Setting =============
 # 
-email ='chaiq.ismail@ofppt-edu.ma'
-password ='Lilnex123@'
+email =''
+password =''
 
 
 emailXpath = '//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-input-label[1]/div/input'
