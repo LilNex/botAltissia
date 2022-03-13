@@ -5,7 +5,8 @@ from re import X
 from sqlite3 import Timestamp
 import sys
 from typing import Any
-from selenium import webdriver
+# from selenium import webdriver
+from seleniumrequests import Chrome
 from selenium import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import *
@@ -13,8 +14,10 @@ from typing import List
 import time
 from selenium.common.exceptions import *
 from classes import *
+from apiCall import *
 # browser  = webdriver.Chrome(ChromeDriverManager().install())
-browser = webdriver.Chrome(executable_path='chromedriver.exe')
+browser = Chrome(executable_path='chromedriver.exe')
+# from selenium.webdriver.
 # browser = webdriver.Firefox(executable_path='geckodriver.exe')
 
 
@@ -25,8 +28,8 @@ browser = webdriver.Chrome(executable_path='chromedriver.exe')
 
 # ============= Setting =============
 # 
-email =''
-password =''
+email ='chaiq.ismail@ofppt-edu.ma'
+password ='Lilnex123@'
 
 
 emailXpath = '//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-input-label[1]/div/input'
@@ -71,7 +74,10 @@ def getListeTheme():
 
 
 def toggleTheme(elem):
-    elem.find_element_by_tag_name('button').click()
+    try:
+        elem.find_element_by_tag_name('button').click()
+    except:
+        time.sleep(0.1)
 
 def grabCards(e:Theme):
     # for e in l:
@@ -255,6 +261,80 @@ def isIncorrect():
 
 
 
+def main():
+    
+    for j in range(0,getCountThemes()):
+        # toggleTheme(l[j].childs)
+        clickThemeCard(j)
+        time.sleep(1.5)
+        listC = getListLessonCards()
+        # l[7].listCards[1].click()
+
+        for iC in range(0,len(getListLessonCards())):
+            time.sleep(1.5)
+
+            getListLessonCards()[iC].click()
+            time.sleep(0.5)
+            exDispo = False
+
+            for i in range(0,len(getListExCards())):
+
+                c:WebElement
+                exit = False
+                while True:
+                    try:
+                        c = getListExCards()[i]
+                        break
+                    except IndexError:
+                        browser.get('https://app.ofppt-langues.ma/platform/#/learning-path')
+                        time.sleep(1)
+                        if len(browser.find_elements_by_css_selector('.altissia-main-button')) > 0:
+                            browser.find_element_by_css_selector('.altissia-main-button').click()
+                            exit = True
+                            time.sleep(0.5)
+                            break
+                
+
+                if exit:
+                    break
+
+
+
+
+                if  (str.__contains__(c.text,"Vocabulaire") or str.__contains__(c.text,"Score : 100") or str.__contains__(c.text,"100")  or str.__contains__(c.text,"Vidéo"))  == False:
+                    if(str.__contains__(c.text,"Exercice") or str.__contains__(c.text,"تمرين")):
+                        exDispo = True
+                        c.click()
+
+                        time.sleep(1.5)
+                        doExercice()
+                        time.sleep(0.3)
+
+
+                        continue
+
+                if i == len(getListExCards()):break
+                # else:
+                #     continue
+                # if str.__contains__(c.text,"pratique") or str.__contains__(c.text,"Vidéo") == False:
+                    
+                #     if (str.__contains__(c.text,"Vocabulaire") or str.__contains__(c.text,"Score : 100")  or str.__contains__(c.text,"Vidéo"))  == False:
+                        
+                            # c.click()
+                            # break
+
+
+            time.sleep(1.5)
+            
+            browser.find_element_by_css_selector('img.logo-image').click()
+            time.sleep(0.5)
+
+                # break
+
+
+                # break
+
+
 
 
     
@@ -287,7 +367,7 @@ def isIncorrect():
 print('nav to altissia\n')
 
 browser.get('https://app.ofppt-langues.ma/platform/#/login/');
-time.sleep(1)
+time.sleep(2)
 
 # browser.find_element_by_css_selector('#app-main-content > altissia-lc-reset-password-container > div > altissia-navigation-header > header > altissia-nav-bar > nav > div > ul > li:nth-child(2) > altissia-language-droplist > div > button').click
 browser.find_element_by_xpath('//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/altissia-navigation-header/header/altissia-nav-bar/nav/div/ul/li[2]/altissia-language-droplist/div/button').click()
@@ -308,8 +388,13 @@ print('logging in ...')
 
 browser.find_element_by_xpath('//*[@id="app-main-content"]/altissia-lc-reset-password-container/div/main/altissia-user-login/altissia-connection-form/form/div/altissia-main-button').click()
 time.sleep(1.5)
+login()
 try:
+
     getListeTheme()
+    getLearningPaths()
+    sendSuccess(missions[0])
+
 except:
     browser.get('https://www.office.com')
     time.sleep(1)
@@ -329,81 +414,16 @@ except:
     browser.get('https://app.ofppt-langues.ma/gw/api/saml/init?idp=https://sts.windows.net/dae54ad7-43df-47b7-ae86-4ac13ae567af/')
     time.sleep(5)
     browser.get('https://app.ofppt-langues.ma/platform/#/learning-path?interfaceLg=fr-FR')
+    time.sleep(2)
+    getListeTheme()
 
 
 i= randint(0,12)
 
-for j in range(0,getCountThemes()):
-    # toggleTheme(l[j].childs)
-    clickThemeCard(j)
-    time.sleep(1.5)
-    listC = getListLessonCards()
-    # l[7].listCards[1].click()
-
-    for iC in range(0,len(getListLessonCards())):
-        time.sleep(1.5)
-
-        getListLessonCards()[iC].click()
-        time.sleep(0.5)
-        exDispo = False
-
-        for i in range(0,len(getListExCards())):
-
-            c:WebElement
-            exit = False
-            while True:
-                try:
-                    c = getListExCards()[i]
-                    break
-                except IndexError:
-                    browser.get('https://app.ofppt-langues.ma/platform/#/learning-path')
-                    time.sleep(1)
-                    if len(browser.find_elements_by_css_selector('.altissia-main-button')) > 0:
-                        browser.find_element_by_css_selector('.altissia-main-button').click()
-                        exit = True
-                        time.sleep(0.5)
-                        break
-            
-
-            if exit:
-                break
-
-
-
-
-            if  (str.__contains__(c.text,"Vocabulaire") or str.__contains__(c.text,"Score : 100")  or str.__contains__(c.text,"Vidéo"))  == False:
-                if(str.__contains__(c.text,"Exercice")):
-                    exDispo = True
-                    c.click()
-
-                    time.sleep(1.5)
-                    doExercice()
-                    time.sleep(0.3)
-
-
-                    continue
-
-            if i == len(getListExCards()):break
-            # else:
-            #     continue
-            # if str.__contains__(c.text,"pratique") or str.__contains__(c.text,"Vidéo") == False:
-                
-            #     if (str.__contains__(c.text,"Vocabulaire") or str.__contains__(c.text,"Score : 100")  or str.__contains__(c.text,"Vidéo"))  == False:
-                    
-                        # c.click()
-                        # break
-
-
-        time.sleep(1.5)
-        
-        browser.find_element_by_css_selector('img.logo-image').click()
-        time.sleep(0.5)
-
-            # break
-
-
-            # break
-
+# try:
+#     main()
+# except:
+#     main()
 
     
 

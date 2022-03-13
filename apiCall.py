@@ -4,30 +4,28 @@ from email.quoprimime import body_check
 from lib2to3.pgen2 import driver
 from time import time
 from urllib import request
-from seleniumrequests import Chrome
+from gevent import idle
+# from seleniumrequests import Chrome
 import json
 import requests
 from typing import List
 import time
+from termcolor import colored
+from classes import *
 
 
 
-class lesson:
-    activities = list()
-    def __init__(self,id:str):
-        self.id = id
-        self.activities = list()
+email = ''
+password = ''
 
-    # self.childs = childs
-class mission:
-    lessons:List[lesson]= list()
-    def __init__(self, id:str):
-        self.id = id
-        self.lessons = list()
+
     # def addLesson(lessonID:str):
         # global lessons
         # lessons.append(lessonID)
         # lessons?
+
+
+
 
 
 device_uuid = "3956abc8-97bd-d955-6f42-43a941c9df14"
@@ -39,15 +37,17 @@ learningPathUrl = 'https://app.ofppt-langues.ma/gw//lcapi/main/api/lc/user-learn
 def getActUrl(idLesson):
     return 'https://app.ofppt-langues.ma/gw//lcapi/main/api/lc/lessons/'+idLesson+'/activities'
 
-webdriver = Chrome()
+def bypassSecu(idLesson,idActivity):
+    return 'https://app.ofppt-langues.ma/gw//lcapi/main/api/lc/lessons/'+idLesson+'/activities/'+idActivity+'?translationLg=fr_FR'
+
+
+# webdriver = Chrome()
 altissiaToken = ''
 header ={
         'Content-Type':'application/json',
         'x-device-uuid':device_uuid
         }
 
-email = ''
-password = ''
 
 learningPaths=''
 learnPathID = ''
@@ -64,19 +64,16 @@ def formatActivitiesUrl(id):
 # print(resp)
 
 
-def login():
-    
+def login():   
     global altissiaToken
     global userLevel
-
     body = {
         "username": email,
         "password": password,
         "deviceName": "Chrome",
         "deviceExplicitName": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
         "platform": "DESKTOP"
-    }
-    
+    }  
     # webdriver.get('https://www.google.com')
     # res = webdriver.request('POST',authUrl,data=body)
     res = requests.post(authUrl, json=body,headers=header)
@@ -84,30 +81,26 @@ def login():
     try:
         altissiaToken = res.headers['Authorization'].replace('Bearer ' ,'')
         header['x-altissia-token'] = altissiaToken
-        print('Token grabbed :' + altissiaToken)
-
+        print(colored('Token grabbed : ','green') + altissiaToken)
         reponse = requests.get('https://app.ofppt-langues.ma/gw//lcapi/main/api/lc/user-learning-paths/language/fr_FR',headers=header)
         jsRep = json.loads(str(reponse.content.decode('utf-8')))
-        switch={
-            'C1':'A1_MINUS',
-            'A1':'A1',
-            'A2':'A2',
-            'B1':'B1',
-            'B2':'B2',
-        }
-        userLevel = switch[jsRep['level']]
-        
-        # if(js)
-
-
-
-        
+        for i in jsRep['levels']:
+            if i['done'] < i['total']:
+                userLevel = i['level']
+                break
+        # switch={
+        #     'C1':'A1_MINUS',
+        #     'A1':'A1',
+        #     'A2':'A2',
+        #     'B1':'B1',
+        #     'B2':'B2',
+        # }
+        # userLevel = switch[jsRep['level']]
     except:
         try:
-            print('Login error message : '+ jsonResponse['message'])
-
+            print(bcolors.WARNING+'Login error message : '+bcolors.ENDC+ jsonResponse['message'])
         except e:
-            print('ERROR :' + str(e))
+            print(bcolors.FAIL+'ERROR :'+bcolors.ENDC + str(e))
 
 
 def getActivites(id):
@@ -133,13 +126,13 @@ def getLearningPaths():
     responseJson = json.loads(res.content.decode('utf-8'))
     learnPathID = responseJson['externalId']
     for item in responseJson['missions']:
-        if item['level'] == userLevel:
+        if item['level'] == userLevel and item['validated'] == False:
             m = mission(item['externalId'])
             for i in item['lessons']:
                 l = lesson(i['externalId'])
                 l.activities = getActivites(l.id)
                 m.lessons.append(l)
-                print(i['externalId'])
+                print('Lesson added : '+i['title'])
             # missionsID.append(item['externalId'])
             missions.append(m)
             # lessons
@@ -159,6 +152,8 @@ def sendSuccess(m:mission):
     for l in m.lessons:
         xxx = client.get(formatActivitiesUrl(l.id),headers=header)
         for a in l.activities:
+            xxx = client.get(bypassSecu(l.id,a),headers=header)
+
             response = client.put(getActUrl(l.id),headers=header,
                 json={
                     "externalActivityId": a,
@@ -185,10 +180,14 @@ def sendSuccess(m:mission):
 login()
 # print(res.request)
 getLearningPaths()
-sendSuccess(missions[0])
-# json.decoder(res.request)
-print(webdriver.requests_session)
 
-print(res)
+print('Sending PUT success')
+
+for m in missions:
+    sendSuccess(m)
+# json.decoder(res.request)
+# print(webdriver.requests_session)
+
+# print(res)
 
 

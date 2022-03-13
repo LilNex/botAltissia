@@ -19,7 +19,9 @@
 # Installation
 ************
 
-Remplacer les variables email et password par vos identifiants 
+Remplacer les variables email et password par vos identifiants dans les fichiers "apiCall.py" et "init.py"
+
+
 
 
 Install Selenium via `pip`_ :
@@ -29,9 +31,15 @@ Install Selenium via `pip`_ :
     $ pip install selenium
 
 
-Demarrez le script :
+Demarrez le script pour passer les heures :
 
 ::
 
     $ py init.py
+
+Demarrez le script pour atteindre le score instantannément :
+
+::
+
+    $ py apiCall.py
 
